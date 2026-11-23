@@ -1,0 +1,54 @@
+name: pr-agent
+
+# Windows Docker Desktop (WSL2 backend).
+# First build the offline sandbox image:
+#   docker compose --profile build build sandbox-image
+# Then start the stack:
+#   docker compose up --build
+
+services:
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
+    ports: ["127.0.0.1:6379:6379"]
+    volumes: ["redis-data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: { context: ., dockerfile: docker/app.Dockerfile }
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    env_file: .env
+    environment:
+      REDIS_URL: "redis://redis:6379/0"
+    ports: ["127.0.0.1:8000:8000"]
+    depends_on:
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+
+  worker:
+    build: { context: ., dockerfile: docker/app.Dockerfile }
+    command: ["python", "-m", "app.worker"]
+    env_file: .env
+    environment:
+      REDIS_URL: "redis://redis:6379/0"
+    # SECURITY: the Docker socket grants host-level Docker control to this container.
+    # It is required to spawn sibling sandbox containers. Sandboxes themselves never get it.
+    # Alternative: run `python -m app.worker` on the host and remove this service.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      redis: { condition: service_healthy }
+    restart: unless-stopped
+
+  sandbox-image:
+    build: { context: ., dockerfile: docker/sandbox-python.Dockerfile }
+    image: pr-agent-sandbox-python:3.11
+    profiles: ["build"]
+
+volumes:
+  redis-data:

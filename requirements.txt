@@ -1,0 +1,14 @@
+# Runtime dependencies (Python 3.11, `pr-agent` Conda env)
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.7,<3.0
+pydantic-settings>=2.3,<3.0
+redis>=5.0,<7.0
+langgraph>=0.2,<2.0
+google-genai>=1.0,<2.0
+PyGithub>=2.3,<3.0
+docker>=7.1,<8.0
+tree-sitter>=0.23,<1.0
+tree-sitter-python>=0.23,<1.0
+unidiff>=0.7.5,<1.0
+httpx>=0.27,<1.0

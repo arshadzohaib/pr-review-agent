@@ -1,0 +1,9 @@
+# Project: Autonomous GitHub PR Review & Patching Agent
+- **OS & Environment:** Windows host running Python 3.11 (`pr-agent` Conda env / `.venv`) and Docker Desktop.
+- **Tech Stack:** FastAPI, Redis (queues, distributed locks, SHA diff caching), LangGraph (stateful agent workflow), Tree-sitter (AST parsing), PyGithub, Docker SDK (`docker-py`), and Google Gemini API (optimized for free-tier rate limits).
+- **Security & Sandbox Rules:**
+  - NEVER hardcode API keys or GitHub tokens; load via `pydantic-settings` from `.env`, add `.env` to `.gitignore`, and maintain `.env.example`.
+  - All untrusted PR code execution MUST run inside ephemeral Docker containers with `network_disabled=True`, memory/CPU caps, and `remove=True`.
+- **Engineering Standards:**
+  - Use strict Python type hints and Pydantic v2 models for all agent states and webhook payloads.
+  - Write `pytest` unit tests for every module and run them in the terminal to verify before moving to the next phase.
