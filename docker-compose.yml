@@ -46,7 +46,7 @@ services:
     restart: unless-stopped
 
   sandbox-image:
-    build: { context: ., dockerfile: docker/sandbox-python.Dockerfile }
+    build: { context: ., dockerfile: docker/sandbox.Dockerfile }
     image: pr-agent-sandbox-python:3.11
     profiles: ["build"]
 

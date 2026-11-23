@@ -138,13 +138,16 @@ class ReviewCache:
         chunk_sha: str,
         prompt_version: int,
         model: str,
-        findings: list[dict[str, Any]],
+        findings: list[Any],
         ttl_s: int | None = None,
     ) -> None:
         """Store findings for a function chunk in Redis."""
         key = f"rv:{prompt_version}:{model}:{chunk_sha}"
         ttl = ttl_s if ttl_s is not None else self.default_review_ttl_s
-        payload = json.dumps(findings, ensure_ascii=False)
+        serializable = [
+            f.model_dump() if hasattr(f, "model_dump") else f for f in findings
+        ]
+        payload = json.dumps(serializable, ensure_ascii=False)
         await self.client.set(key, payload, ex=ttl)
 
     # --- AST Symbols Cache ---
