@@ -1,17 +1,22 @@
 name: pr-agent
 
-# Windows Docker Desktop (WSL2 backend).
-# First build the offline sandbox image:
-#   docker compose --profile build build sandbox-image
-# Then start the stack:
-#   docker compose up --build
+# Single-command full application stack deployment:
+#   docker-compose up --build -d
+#
+# Services:
+#   1. redis: Redis 7.4-alpine state store (locks, queues, SHA diff cache, rate limiter)
+#   2. sandbox-image: Seeds the hardened offline Python 3.11 test runner image (runs once and exits 0)
+#   3. api: FastAPI webhook server listening on port 8000
+#   4. worker: Background review worker loop processing PR events with Docker sandbox verification
 
 services:
   redis:
     image: redis:7.4-alpine
     command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "noeviction"]
-    ports: ["127.0.0.1:6379:6379"]
-    volumes: ["redis-data:/data"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis-data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -19,36 +24,45 @@ services:
       retries: 10
     restart: unless-stopped
 
+  sandbox-image:
+    build:
+      context: .
+      dockerfile: docker/sandbox.Dockerfile
+    image: pr-agent-sandbox-python:3.11
+    profiles: ["build"]
+
   api:
-    build: { context: ., dockerfile: docker/app.Dockerfile }
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
     env_file: .env
     environment:
       REDIS_URL: "redis://redis:6379/0"
-    ports: ["127.0.0.1:8000:8000"]
+    ports:
+      - "127.0.0.1:8000:8000"
     depends_on:
-      redis: { condition: service_healthy }
+      redis:
+        condition: service_healthy
     restart: unless-stopped
 
   worker:
-    build: { context: ., dockerfile: docker/app.Dockerfile }
+    build:
+      context: .
+      dockerfile: Dockerfile
     command: ["python", "-m", "app.worker"]
     env_file: .env
     environment:
       REDIS_URL: "redis://redis:6379/0"
-    # SECURITY: the Docker socket grants host-level Docker control to this container.
-    # It is required to spawn sibling sandbox containers. Sandboxes themselves never get it.
-    # Alternative: run `python -m app.worker` on the host and remove this service.
     volumes:
+      # DooD (Docker-out-of-Docker) socket to allow worker to create sibling sandbox containers
       - /var/run/docker.sock:/var/run/docker.sock
+      # Shared tmp directory for ephemeral test workspaces mounted into sandbox containers
+      - /tmp:/tmp
     depends_on:
-      redis: { condition: service_healthy }
+      redis:
+        condition: service_healthy
     restart: unless-stopped
-
-  sandbox-image:
-    build: { context: ., dockerfile: docker/sandbox.Dockerfile }
-    image: pr-agent-sandbox-python:3.11
-    profiles: ["build"]
 
 volumes:
   redis-data:

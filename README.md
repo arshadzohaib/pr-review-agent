@@ -6,7 +6,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg)](https://fastapi.tiangolo.com/)
 [![LangGraph](https://img.shields.io/badge/LangGraph-stateful%20workflow-orange)](https://github.com/langchain-ai/langgraph)
 [![Tree-sitter](https://img.shields.io/badge/Tree--sitter-AST%20parsing-teal)](https://tree-sitter.github.io/)
-[![Google Gemini API](https://img.shields.io/badge/Gemini%202.5%20Flash-Free%20Tier%20Guarded-4285F4)](https://ai.google.dev/)
+[![Google Gemini API](https://img.shields.io/badge/Gemini%203.8%20Flash-Free%20Tier%20Guarded-4285F4)](https://ai.google.dev/)
 [![Redis 7](https://img.shields.io/badge/Redis-Streams%20%2B%20Lua-red)](https://redis.io/)
 
 An autonomous, production-grade GitHub Pull Request review, bug-finding, and patch-verification agent. Engineered to run completely within **free-tier Gemini API quotas** without sacrificing architectural depth or execution security.
@@ -36,7 +36,7 @@ flowchart TD
     end
 
     subgraph LangGraph Verification Loop
-        CTX -->|Lua Rate Limiter (RPM/TPM/RPD)| LLM_REV["analyze_diff (Gemini 2.5 Flash)"]
+        CTX -->|Lua Rate Limiter (RPM/TPM/RPD)| LLM_REV["analyze_diff (Gemini 3.8 Flash)"]
         LLM_REV -->|Clean PR / No Bugs| END_CLEAN["Exit Cleanly (Review Comment)"]
         LLM_REV -->|Suspected Bug| REPRO_GEN["generate_reproduction (Write pytest repro)"]
         REPRO_GEN --> SBX_BASE["Docker Sandbox (network_disabled=True)"]
@@ -120,7 +120,7 @@ LOG_LEVEL=INFO
 GITHUB_TOKEN=ghp_yourRealGitHubTokenHere
 GITHUB_WEBHOOK_SECRET=yourWebhookSecretHere
 GEMINI_API_KEY=AIzaSyYourGeminiApiKeyHere
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.8-flash
 REDIS_URL=redis://localhost:6379/0
 ```
 

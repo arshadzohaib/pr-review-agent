@@ -65,9 +65,9 @@ async def test_review_cache_chunks_and_ast_and_sandbox() -> None:
 
     # Review chunk
     findings = [{"line": 10, "title": "Bug found", "severity": "major"}]
-    assert await cache.get_review_chunk("chunk-1", 1, "gemini-2.5-flash") is None
-    await cache.set_review_chunk("chunk-1", 1, "gemini-2.5-flash", findings)
-    cached = await cache.get_review_chunk("chunk-1", 1, "gemini-2.5-flash")
+    assert await cache.get_review_chunk("chunk-1", 1, "gemini-3.8-flash") is None
+    await cache.set_review_chunk("chunk-1", 1, "gemini-3.8-flash", findings)
+    cached = await cache.get_review_chunk("chunk-1", 1, "gemini-3.8-flash")
     assert cached == findings
 
     # AST symbols

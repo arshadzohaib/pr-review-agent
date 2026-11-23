@@ -18,7 +18,7 @@ class DummyOutput(BaseModel):
 
 @pytest.mark.asyncio
 async def test_gemini_client_successful_structured_generation() -> None:
-    client = GeminiClient(api_key="fake-test-key", model_name="gemini-2.5-flash")
+    client = GeminiClient(api_key="fake-test-key", model_name="gemini-3.8-flash")
 
     mock_response = MagicMock()
     mock_response.text = '{"message": "success", "code": 200}'

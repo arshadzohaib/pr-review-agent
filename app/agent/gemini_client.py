@@ -36,7 +36,7 @@ class GeminiClient:
     def __init__(
         self,
         api_key: str,
-        model_name: str = "gemini-2.5-flash",
+        model_name: str = "gemini-3.8-flash",
         rate_limiter: GeminiRateLimiter | None = None,
         max_wait_s: int = 90,
     ) -> None:

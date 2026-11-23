@@ -149,7 +149,7 @@ class GeminiRateLimiter:
     def __init__(
         self,
         client: Redis,
-        default_model: str = "gemini-2.5-flash",
+        default_model: str = "gemini-3.8-flash",
         rpm_limit: int = 8,
         tpm_limit: int = 200_000,
         rpd_limit: int = 200,

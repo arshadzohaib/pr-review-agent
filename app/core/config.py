@@ -59,7 +59,7 @@ class Settings(BaseSettings):
 
     # --- Gemini ---
     gemini_api_key: SecretStr
-    gemini_model: str = Field(default="gemini-2.5-flash", min_length=1)
+    gemini_model: str = Field(default="gemini-3.8-flash", min_length=1)
     gemini_rpm_limit: int = Field(default=8, ge=1, le=10_000)
     gemini_tpm_limit: int = Field(default=200_000, ge=1_000)
     gemini_rpd_limit: int = Field(default=200, ge=1)

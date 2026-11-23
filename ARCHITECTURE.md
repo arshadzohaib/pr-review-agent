@@ -430,7 +430,7 @@ GITHUB_TOKEN=ghp_replace_me
 GITHUB_WEBHOOK_SECRET=replace_me
 # --- Gemini (free tier) ---
 GEMINI_API_KEY=replace_me
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.8-flash
 GEMINI_RPM_LIMIT=8
 GEMINI_TPM_LIMIT=200000
 GEMINI_RPD_LIMIT=200

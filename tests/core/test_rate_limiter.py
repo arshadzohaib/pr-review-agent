@@ -90,14 +90,14 @@ async def test_rate_limiter_backoff_and_usage_correction() -> None:
     limiter = GeminiRateLimiter(redis, rpm_limit=10, tpm_limit=100_000, rpd_limit=50)
 
     # 429 backoff
-    await limiter.record_backoff("gemini-2.5-flash", delay_seconds=2.0)
+    await limiter.record_backoff("gemini-3.8-flash", delay_seconds=2.0)
     res = await limiter.acquire()
     assert res.allowed is False
     assert res.reason == "BACKOFF_ACTIVE"
 
     # Token usage correction
-    req = await limiter.acquire(model="gemini-2.5-flash", estimated_tokens=500)
+    req = await limiter.acquire(model="gemini-3.8-flash", estimated_tokens=500)
     if req.allowed:
         await limiter.record_usage(
-            "gemini-2.5-flash", req.req_id, estimated_tokens=500, actual_tokens=250
+            "gemini-3.8-flash", req.req_id, estimated_tokens=500, actual_tokens=250
         )

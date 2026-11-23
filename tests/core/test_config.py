@@ -45,7 +45,7 @@ def test_parse_memory_invalid(value: str) -> None:
 def test_defaults_load_with_valid_secrets(make_settings: MakeSettings) -> None:
     s = make_settings()
     assert s.max_retries == HARD_MAX_RETRIES == 2
-    assert s.gemini_model == "gemini-2.5-flash"
+    assert s.gemini_model == "gemini-3.8-flash"
     assert s.sandbox_image == "pr-agent-sandbox-python:3.11"
     assert s.sandbox_mem_bytes == 512 * 1024**2
     assert s.redis_url == "redis://localhost:6379/0"

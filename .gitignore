@@ -44,3 +44,13 @@ logs/
 tmp/
 .tmp/
 workspaces/
+
+# --- Docs / Local notes (interview prep) ---
+INTERVIEW_PREP.md
+
+.env
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyc
