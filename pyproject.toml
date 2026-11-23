@@ -26,6 +26,7 @@ ignore = []
 [tool.mypy]
 python_version = "3.11"
 strict = true
+namespace_packages = false
 plugins = ["pydantic.mypy"]
 packages = ["app"]
 
@@ -39,5 +40,7 @@ module = [
     "tree_sitter.*",
     "tree_sitter_python",
     "tree_sitter_python.*",
+    "docker",
+    "docker.*",
 ]
 ignore_missing_imports = true
