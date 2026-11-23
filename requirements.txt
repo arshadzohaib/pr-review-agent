@@ -12,3 +12,5 @@ tree-sitter>=0.23,<1.0
 tree-sitter-python>=0.23,<1.0
 unidiff>=0.7.5,<1.0
 httpx>=0.27,<1.0
+# IANA timezone data for Gemini's Pacific-time daily quota reset (Windows has none built in)
+tzdata>=2024.1; sys_platform == "win32"

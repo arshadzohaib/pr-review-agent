@@ -68,6 +68,9 @@ class Settings(BaseSettings):
     # --- Redis ---
     redis_url: str = "redis://localhost:6379/0"
     review_cache_ttl_s: int = Field(default=7 * 24 * 3600, ge=60)
+    lock_ttl_s: int = Field(default=300, ge=10, le=3600)
+    queue_stale_after_s: int = Field(default=600, ge=30, le=86_400)
+    queue_max_deliveries: int = Field(default=3, ge=1, le=10)
 
     # --- Agent budgets / guardrails ---
     prompt_version: int = Field(default=1, ge=1)
