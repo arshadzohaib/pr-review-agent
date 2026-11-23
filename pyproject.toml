@@ -42,5 +42,11 @@ module = [
     "tree_sitter_python.*",
     "docker",
     "docker.*",
+    "langgraph",
+    "langgraph.*",
+    "google",
+    "google.*",
+    "google.genai",
+    "google.genai.*",
 ]
 ignore_missing_imports = true
